@@ -1,25 +1,30 @@
-<# 
+<#
 Author: Brice SARRAZIN
 Github: https://github.com/b-sarrazin/ModernManagement
 
-When OneDrive KFM (Knowns Folders Move) is configured, desktop shortcuts may end up as duplicates on the desktop on first login.
+# Remove-DuplicateShortcutOnDesktop
 
-This script performs the following actions:
-- Create the hidden ".cleaned" folder
-- Search for duplicate shortcuts on the desktop
-- Move the original shortcut to the hidden ".cleaned" folder because it sometimes lost its icon?! (unlike duplicate)
-- Rename the duplicate with the same name as the original
-- Move remaining duplicates to hidden ".cleaned" folder
+**When OneDrive KFM (Knowns Folders Move) is configured, desktop shortcuts may end up as duplicates on the desktop on first login.**
 
-Why move duplicate shortcuts to the hidden ".cleaned" folder?
-Deleting files could trigger a warning window from OneDrive. For a seamless user experience, duplicate shortcuts are therefore moved to the hidden ".cleaned" folder and remain recoverable if needed.
+**This script performs the following actions :**
+>- Create the hidden ".cleaned" folder
+>- Search for duplicate shortcuts on the desktop
+>- Move the original shortcut to the hidden ".cleaned" folder because it sometimes lost its icon?! (unlike duplicate)
+>- Rename the duplicate with the same name as the original
+>- Move remaining duplicates to hidden ".cleaned" folder
 
-Settings in Intune > Devices > Windows > Scripts :
-- Run this script using the logged on credentials: Yes
-- Enforce script signature check: No
-- Run script in 64 bit PowerShell Host: No
+**Why move duplicate shortcuts to the hidden ".cleaned" folder?**
+>
+> Deleting files could trigger a warning window from OneDrive. For a seamless user experience, duplicate shortcuts are therefore moved to the hidden ".cleaned" folder and remain recoverable if needed.
 
-The .exe file is a compiled version of the .ps1. This allows to no longer have a PowerShell window that appears during execution.
+**Settings in Intune :**
+> - Run this script using the logged on credentials: Yes
+> - Enforce script signature check: No
+> - Run script in 64 bit PowerShell Host: No
+
+The **.exe** file is a compiled version of the .ps1. This **allows to no longer have a PowerShell window that appears during execution**.
+
+---
 #>
 
 $Regex = switch ($PSUICulture) {
@@ -38,7 +43,7 @@ if ($CleanedFolder) {
     # OK
 }
 else {
-    $CleanedFolder = New-Item -Path $CleanedPath -ItemType Directory -Force -Confirm:$false
+    $CleanedFolder = New-Item -Path $CleanedPath -ItemType Directory -Force
 }
 $CleanedFolder.Attributes = 'Hidden'
 
@@ -56,11 +61,11 @@ for ($i = 0; $i -lt $Files.Count - 1; $i++) {
         # If duplicates found
         if ($DuplicateFiles) {
             # Move the original shortcut because it sometimes lost its icon?! (unlike duplicate)
-            $Files[$i].FullName | Move-Item -Destination $CleanedPath -Force -Confirm:$false -ErrorAction SilentlyContinue
+            $Files[$i].FullName | Move-Item -Destination $CleanedPath -Force -ErrorAction SilentlyContinue
             # Rename the duplicate with the same name as the original
-            $DuplicateFiles[0].FullName | Move-Item -Destination $Files[$i].FullName -Force -Confirm:$false
+            $DuplicateFiles[0].FullName | Move-Item -Destination $Files[$i].FullName -Force
             # Move other remaining duplicates
-            $DuplicateFiles.FullName | Move-Item -Destination $CleanedPath -Force -Confirm:$false -ErrorAction SilentlyContinue
+            $DuplicateFiles.FullName | Move-Item -Destination $CleanedPath -Force -ErrorAction SilentlyContinue
         }
     }
 }
