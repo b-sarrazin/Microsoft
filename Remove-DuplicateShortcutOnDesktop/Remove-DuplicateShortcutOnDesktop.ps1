@@ -1,6 +1,6 @@
 <#
 Author: Brice SARRAZIN
-Github: https://github.com/b-sarrazin/ModernManagement
+Github: https://github.com/b-sarrazin/ModernManagement/Remove-DuplicateShortcutOnDesktop
 
 # Remove-DuplicateShortcutOnDesktop
 
@@ -41,16 +41,15 @@ $CleanedPath = Join-Path -Path $DesktopPath -ChildPath '.cleaned'
 $CleanedFolder = Get-ChildItem -Path $CleanedPath -Directory -ErrorAction SilentlyContinue
 if ($CleanedFolder) {
     # OK
-}
-else {
+} else {
     $CleanedFolder = New-Item -Path $CleanedPath -ItemType Directory -Force
 }
 $CleanedFolder.Attributes = 'Hidden'
 
 # Get all desktop shortcuts and sort them by name
 $Files = Get-ChildItem -Path $DesktopPath -Filter *.lnk |
-    Select-Object FullName, BaseName |
-    Sort-Object BaseName
+Select-Object FullName, BaseName |
+Sort-Object BaseName
 
 # Browse all shortcuts found
 for ($i = 0; $i -lt $Files.Count - 1; $i++) {
