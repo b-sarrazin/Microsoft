@@ -23,8 +23,6 @@ Github: https://github.com/b-sarrazin/ModernManagement/Remove-DuplicateShortcutO
 > - Run script in 64 bit PowerShell Host: No
 
 The **.exe** file is a compiled version of the .ps1. This **allows to no longer have a PowerShell window that appears during execution**.
-
----
 #>
 
 $Regex = switch ($PSUICulture) {
@@ -48,8 +46,8 @@ $CleanedFolder.Attributes = 'Hidden'
 
 # Get all desktop shortcuts and sort them by name
 $Files = Get-ChildItem -Path $DesktopPath -Filter *.lnk |
-Select-Object FullName, BaseName |
-Sort-Object BaseName
+    Select-Object FullName, BaseName |
+    Sort-Object BaseName
 
 # Browse all shortcuts found
 for ($i = 0; $i -lt $Files.Count - 1; $i++) {
