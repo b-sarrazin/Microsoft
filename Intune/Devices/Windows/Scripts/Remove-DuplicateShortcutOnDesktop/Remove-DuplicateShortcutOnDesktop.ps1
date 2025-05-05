@@ -18,6 +18,9 @@
     - Rename the duplicate with the same name as the original
     - Move remaining duplicates to hidden ".cleaned" folder
 
+    .LINK
+    Github: https://github.com/b-sarrazin/Microsoft
+
     .SETTINGS
     Run this script using the logged-on credentials	No
     Enforce script signature check					No

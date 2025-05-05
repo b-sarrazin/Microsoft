@@ -13,7 +13,7 @@
     This script takes an AppLocker XML file and splits it into multiple XML files, each containing a single RuleCollection. The output files are saved in a specified folder, which is created if it does not exist. The script also detects the environment based on the XML file name and organizes the output accordingly.
 
     .LINK
-    Github: https://github.com/b-sarrazin/ModernManagement
+    Github: https://github.com/b-sarrazin/Microsoft
 
     .EXAMPLE
     .\Split-XML.ps1
