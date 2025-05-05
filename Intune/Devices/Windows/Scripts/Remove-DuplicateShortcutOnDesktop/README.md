@@ -1,23 +1,63 @@
 # Remove-DuplicateShortcutOnDesktop
 
-**When OneDrive KFM (Knowns Folders Move) is configured, desktop shortcuts may end up as duplicates on the desktop on first login.**
+**Fixes duplicate desktop shortcuts caused by OneDrive Known Folder Move (KFM) during first user logon.**
 
-**This script performs the following actions :**
->
->- Create the hidden ".cleaned" folder
->- Search for duplicate shortcuts on the desktop
->- Move the original shortcut to the hidden ".cleaned" folder because it sometimes lost its icon?! (unlike duplicate)
->- Rename the duplicate with the same name as the original
->- Move remaining duplicates to hidden ".cleaned" folder
+When KFM is enabled, users may encounter duplicated shortcuts on their desktop (e.g., `Shortcut.lnk` and `Shortcut (1).lnk`). This PowerShell script automatically cleans them up in a safe and non-intrusive way.
 
-**Why move duplicate shortcuts to the hidden ".cleaned" folder?**
->
-> Deleting files could trigger a warning window from OneDrive. For a seamless user experience, duplicate shortcuts are therefore moved to the hidden ".cleaned" folder and remain recoverable if needed.
+---
 
-**Settings in Intune :**
->
-> - Run this script using the logged on credentials: Yes
-> - Enforce script signature check: No
-> - Run script in 64 bit PowerShell Host: No
+## 🧰 What the Script Does
 
-The **.exe** file is a compiled version of the .ps1. This **allows to no longer have a PowerShell window that appears during execution**.
+✔️ Creates a hidden `.cleaned` folder on the desktop
+✔️ Detects duplicate `.lnk` (shortcut) files
+✔️ Moves the *original* shortcut to `.cleaned` if it's broken (e.g., missing icon)
+✔️ Renames the *duplicate* to the original name (keeping the working shortcut)
+✔️ Moves any remaining duplicates to `.cleaned` (instead of deleting)
+
+---
+
+## ❓ Why Not Just Delete?
+
+Deleting files from the desktop can prompt OneDrive sync warnings or even block the deletion.
+To avoid disrupting the user experience, the script **moves duplicates to a hidden `.cleaned` folder** — making them recoverable if needed.
+
+---
+
+## 💻 Intune Deployment Settings
+
+| Setting                              | Value     |
+|--------------------------------------|-----------|
+| Run this script using the logged on credentials | Yes       |
+| Enforce script signature check       | No        |
+| Run script in 64-bit PowerShell Host | No        |
+
+---
+
+## 🧱 About the `.exe` Version
+
+A compiled `.exe` version of the script is included.
+Using the executable prevents the PowerShell console window from appearing during execution — offering a **cleaner, invisible user experience**.
+
+---
+
+## 📁 Output Example
+
+```
+C:\Users\<Username>\Desktop\
+├── MyApp.lnk
+├── .cleaned\
+│   ├── MyApp (1).lnk
+│   └── BrokenShortcut.lnk
+```
+
+---
+
+## ✅ Ideal Use Case
+
+This script is intended for Windows environments where:
+
+- OneDrive KFM is deployed via Intune or GPO
+- Users are seeing cluttered desktops due to duplicate shortcuts
+- You want a seamless cleanup without user disruption
+
+---
