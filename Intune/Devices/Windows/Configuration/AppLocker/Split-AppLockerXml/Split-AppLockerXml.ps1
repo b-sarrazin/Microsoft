@@ -32,6 +32,10 @@ param (
 )
 
 # Check if the XML file exists
+if (-Not $XmlFilePath) {
+    Write-Error "No XML file selected. Please select a valid XML file." -ErrorAction Stop
+    exit
+}
 if (-Not (Test-Path $XmlFilePath -PathType Leaf)) {
     Write-Error "XML file not found. Please check the path." -ErrorAction Stop
     exit
@@ -109,5 +113,5 @@ foreach ($ruleCollection in $xmlContent.AppLockerPolicy.RuleCollection) {
     Write-Output "File created: $outputFile"
 
     # Remove the line containing the XML declaration
-    (Get-Content $outputFile | Where-Object { $_ -notmatch '^<\?xml ' }) | Set-Content $outputFile
+    (Get-Content $outputFile | Where-Object { $_ -notmatch '^<\?xml ' }) | Set-Content $outputFile -Force
 }
