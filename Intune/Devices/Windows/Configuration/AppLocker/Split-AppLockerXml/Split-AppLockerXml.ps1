@@ -28,7 +28,8 @@
 param (
     [string]$XmlFilePath = (Get-ChildItem -Path $PSScriptRoot -Filter "*.xml" | Out-GridView -Title "Select XML File" -PassThru | Select-Object -First 1).FullName,
     [string]$OutputFolder = "$PSScriptRoot\AppLockerRulesByCollection",
-    [string]$Environment
+    [string]$Environment,
+    [bool]$Overwrite = $true
 )
 
 # Check if the XML file exists
@@ -112,6 +113,12 @@ foreach ($ruleCollection in $xmlContent.AppLockerPolicy.RuleCollection) {
     $newXml.Save($outputFile)
     Write-Output "File created: $outputFile"
 
-    # Remove the line containing the XML declaration
-    (Get-Content $outputFile | Where-Object { $_ -notmatch '^<\?xml ' }) | Set-Content $outputFile -Force
+    # Remove old file if it exists and overwrite if specified
+    if ($Overwrite -and (Test-Path $outputFile)) {
+        Remove-Item $outputFile -Force
+        Write-Output "Old file removed: $outputFile"
+    }
+
+    # Remove the line containing the XML declaration and write output file
+    (Get-Content $outputFile | Where-Object { $_ -notmatch '^<\?xml ' }) | Set-Content $outputFile
 }
